@@ -3,7 +3,7 @@ from decouple import config
 
 from django.utils.timezone import datetime, timedelta
 
-from sms_ir import SmsIr
+# from sms_ir import SmsIr
 
 
 def sendToken(request, phone):
