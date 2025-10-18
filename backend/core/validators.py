@@ -3,11 +3,12 @@ import re
 
 def iranian_phone_number_normalizer(phone: str) -> str:
     """
-    Iranian phone numbers are:
+    Iranian phone numbers pattern are:
         - 09123456789
         - +989123456789
         - 00989123456789
-        - 9123456789
+        - 9123456789 
+
     All of them should convert to standard pattern
     and then got saved!
 
@@ -28,6 +29,6 @@ def iranian_phone_number_normalizer(phone: str) -> str:
     if len(phone) == 10 and not phone.startswith("0") and phone.startswith("9"):
         phone = "0" + phone
     else:
-        return "Can't be normalized!"
+        return "Error"
 
     return phone
