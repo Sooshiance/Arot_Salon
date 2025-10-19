@@ -1,3 +1,50 @@
 from django.db import models
+from django.conf import settings
 
-# Create your models here.
+from .managers import PublicCommentManager, PublicServiceCommentManager
+from apps.service.models import Service
+
+
+User = settings.AUTH_USER_MODEL
+
+
+class Post(models.Model):
+    """"""
+
+    title = models.CharField(max_length=255)
+    txt = models.CharField(max_length=512)
+
+
+class Comment(models.Model):
+    """"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    txt = models.CharField(max_length=512)
+    is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True)
+
+    publication = PublicCommentManager()
+
+    def __str__(self):
+        return f"{self.user}->{self.post} wrote {self.txt[:15]}"
+
+
+class ServiceComment(models.Model):
+    """"""
+
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    txt = models.CharField(max_length=512)
+    vote = models.PositiveSmallIntegerField()
+    is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True)
+
+    publication = PublicServiceCommentManager()
+
+    class Meta:
+        verbose_name = "Service Comment"
+        verbose_name_plural = "Service Comments"
+
+    def __str__(self):
+        return f"{self.service} - {self.user}: {self.txt}"
