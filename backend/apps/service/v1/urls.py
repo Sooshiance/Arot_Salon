@@ -12,7 +12,7 @@ urlpatterns = [
         name="home",
     ),
     path(
-        "<pk:int>/",
+        "<int:pk>/",
         service_item,
         name="service",
     ),
