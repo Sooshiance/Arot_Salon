@@ -78,9 +78,12 @@ class RegisterForm(UserCreationForm):
         cleaned_data = super(RegisterForm, self).clean()
         phone = cleaned_data.get("phone")
 
+        print(f"\nphone {'=' * 25}> {phone}")
+
         normalized_phone = iranian_phone_number_normalizer(phone)
 
         if normalized_phone == "Error":
+            print(f"\nphone {'=' * 25}> {phone}")
             raise ValidationError("Phone is not an iranian phone number")
         return normalized_phone
 

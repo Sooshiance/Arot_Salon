@@ -8,7 +8,7 @@ class User(AbstractBaseUser):
     numbers = RegexValidator(r"^09\d{9}$", message="Numbers")
     phone = models.CharField(unique=True, max_length=244, validators=[numbers])
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=11, unique=True)
+    username = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     is_active = models.BooleanField(default=True, null=False)

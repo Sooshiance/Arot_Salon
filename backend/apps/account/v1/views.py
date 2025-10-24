@@ -58,7 +58,6 @@ def login_user(
         request,
         "account/login.html",
         {"form": form},
-        status=405,
     )
 
 
@@ -94,7 +93,12 @@ def register_user(
             return redirect("account:login")
         else:
             messages.error(request, f"{form.errors}")
-            return redirect("account:register")
+            return render(
+                request,
+                "account/register.html",
+                {"form": form},
+                status=401,
+            )
     else:
         form = RegisterForm()
     return render(request, "account/register.html", {"form": form})
