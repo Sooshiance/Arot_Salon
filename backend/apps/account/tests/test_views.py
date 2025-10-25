@@ -67,7 +67,8 @@ class TestLogin(TestBaseAccount):
 
         self.assertEqual(len(messages), 1)
         self.assertEqual(
-            str(messages[0]), "مشخصات وارد شده اشتباه می باشد، دوباره تلاش کنید"
+            str(messages[0]),
+            "مشخصات وارد شده اشتباه می باشد، دوباره تلاش کنید",
         )
 
 
@@ -93,9 +94,8 @@ class TestRegister(TestBaseAccount):
 
         self.user_password = self.english_faker.password(15)
 
-    # FIXME: {'errors': dict_items([('phone', ['Phone is not an iranian phone number'])])
     def test_create_user_success(self) -> None:
-        # Generate a valid 7-digit number for the phone suffix
+        """"""
         phone_suffix = str(random.randint(1000000, 9999999))
 
         user_data = {
@@ -104,7 +104,7 @@ class TestRegister(TestBaseAccount):
             "password": self.user_password,
             "password1": self.user_password,
             "password2": self.user_password,
-            "username": self.english_faker.texts(nb_texts=9),
+            "username": self.english_faker.name(),
             "first_name": self.english_faker.name(),
             "last_name": self.english_faker.name(),
         }
@@ -114,8 +114,7 @@ class TestRegister(TestBaseAccount):
             data={**user_data},
         )
 
-        print(response.context)
-
+        self.assertEqual(response.status_code, 302)
 
     def test_create_user_fail(self) -> None:
         """Test that registration fails when using existing unique field values."""
