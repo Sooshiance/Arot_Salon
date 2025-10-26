@@ -14,6 +14,10 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     txt = models.CharField(max_length=512)
 
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.title
 
 class Comment(models.Model):
     """"""
@@ -24,10 +28,15 @@ class Comment(models.Model):
     is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
+
     publication = PublicCommentManager()
 
     def __str__(self):
         return f"{self.user}->{self.post} wrote {self.txt[:15]}"
+
+    class Meta:
+        ordering = ["-created_at"]
 
 
 class ServiceComment(models.Model):
@@ -40,11 +49,14 @@ class ServiceComment(models.Model):
     is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
+
     publication = PublicServiceCommentManager()
 
     class Meta:
         verbose_name = "Service Comment"
         verbose_name_plural = "Service Comments"
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.service} - {self.user}: {self.txt}"

@@ -6,7 +6,7 @@ from .views import post_list, post_item, create_comment_post, create_comment_ser
 app_name = "blog"
 
 urlpatterns = [
-    path("post/", post_list, name="all_post"),
+    path("post/", post_list, name="post_list"),
     path("post/<int:pk>/", post_item, name="post"),
     path(
         "post/comment/<int:pk>/",

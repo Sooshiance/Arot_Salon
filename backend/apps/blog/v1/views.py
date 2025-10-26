@@ -22,7 +22,8 @@ def post_list(request: HttpRequest) -> HttpResponse:
 
 def post_item(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(Post, pk)
-    comments = Comment.publication.all()
+    # FIXME: Fix the query
+    comments = Comment.publication.filter(post__in=post)
     return render(
         request,
         "blog/post_item.html",
