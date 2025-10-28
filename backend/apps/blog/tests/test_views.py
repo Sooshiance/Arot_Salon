@@ -100,10 +100,28 @@ class TestComment(BaseTestBlog):
             "blog:post",
             kwargs={"pk": self.post.pk},
         )
+        self.create_comment_post_url = reverse(
+            "blog:create_comment_post",
+            kwargs={"pk": self.post.pk},
+        )
 
     def test_comment_post_list(self) -> None:
         """"""
 
         response = self.client.get(self.post_url)
 
-        print(response.status_code)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_comment_on_post(self) -> None:
+        """"""
+
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            self.create_comment_post_url,
+            data={
+                "txt": self.english_faker.text(5),
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)

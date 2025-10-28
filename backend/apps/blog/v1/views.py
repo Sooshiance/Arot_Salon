@@ -5,6 +5,7 @@ from django.http import (
     HttpResponsePermanentRedirect,
     HttpResponseRedirect,
 )
+from django.core.exceptions import FieldDoesNotExist
 
 from apps.blog.models import Post, Comment, ServiceComment
 from .forms import CommentForm, ServiceCommentForm
@@ -21,9 +22,11 @@ def post_list(request: HttpRequest) -> HttpResponse:
 
 
 def post_item(request: HttpRequest, pk: int) -> HttpResponse:
-    post = get_object_or_404(Post, pk)
-    # FIXME: Fix the query
-    comments = Comment.publication.filter(post__in=post)
+    try:
+        post = Post.objects.get(pk=pk)
+    except FieldDoesNotExist as ex:
+        raise str(ex)
+    comments = Comment.publication.filter(post__exact=post)
     return render(
         request,
         "blog/post_item.html",
@@ -32,9 +35,13 @@ def post_item(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 def create_comment_post(
-    request: HttpRequest, pk: int
+    request: HttpRequest,
+    pk: int,
 ) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
-    post = get_object_or_404(Post, pk)
+    try:
+        post = Post.objects.get(pk=pk)
+    except FieldDoesNotExist as ex:
+        raise str(ex)
     if not request.user.is_authenticated:
         return redirect("account:login")
     if request.method == "POST":
@@ -46,10 +53,9 @@ def create_comment_post(
                 user=request.user,
                 txt=txt,
             ).save()
-            return redirect("blog:all_post")
+            return redirect("blog:post_list")
         else:
-            # FIXME: Better redirection process
-            return redirect("blog:all_post")
+            return redirect("blog:post")
     else:
         form = CommentForm()
     return render(
@@ -75,10 +81,9 @@ def create_comment_service(
                 user=request.user,
                 txt=txt,
             ).save()
-            # FIXME: Better redirection process
-            return redirect("blog:all_post")
+            return redirect("service:home")
         else:
-            return redirect("blog:all_post")
+            return redirect("service:service")
     else:
         form = ServiceCommentForm()
     return render(
