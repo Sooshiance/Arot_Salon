@@ -1,12 +1,13 @@
 # TODO: Forget password scenarios
+
 from django.contrib import auth, messages
-from django.shortcuts import render, redirect
 from django.http import (
-    HttpResponseRedirect,
-    HttpResponsePermanentRedirect,
-    HttpResponse,
     HttpRequest,
+    HttpResponse,
+    HttpResponsePermanentRedirect,
+    HttpResponseRedirect,
 )
+from django.shortcuts import redirect, render
 
 from apps.account.models import User
 from apps.account.v1.forms import LoginForm, RegisterForm
@@ -16,7 +17,7 @@ def login_user(
     request: HttpRequest,
 ) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
     if request.user.is_authenticated:
-        messages.warning(request, "شما نمیتوانید به این صفحه مراجعه کنید")
+        messages.warning(request, "not this one")
         return redirect("service:home")
     elif request.method == "POST":
         form = LoginForm(request.POST)
@@ -32,13 +33,10 @@ def login_user(
 
             if user is not None:
                 auth.login(request, user)
-                messages.success(request, "خوش آمدید")
+                messages.success(request, "error")
                 return redirect("service:home")
             else:
-                messages.error(
-                    request,
-                    "مشخصات وارد شده اشتباه می باشد، دوباره تلاش کنید",
-                )
+                messages.error(request, "Error")
                 return render(
                     request,
                     "account/login.html",

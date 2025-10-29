@@ -1,0 +1,35 @@
+{
+  // ===== Mypy Configuration =====
+  "mypy-type-checker.args": [
+  "--strict",
+  "--show-error-codes",
+  "--pretty",
+  "--warn-unused-ignores",
+  "--warn-redundant-casts",
+  "--warn-unreachable",
+  "--config-file",
+  "mypy.ini"
+  ],
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "mypy-type-checker.preferDaemon": true,
+  
+  // ===== Ruff Configuration =====
+  "ruff.enable": true,
+  "ruff.importStrategy": "fromEnvironment",
+  "ruff.lint.enable": true,
+  "ruff.organizeImports": true,
+  
+  // Enable Ruff as default formatter for Python
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    }
+  },
+  
+  // Optional: Show problems inline
+  "problems.showCurrentInStatus": true,
+  "editor.rulers": [88, 120],
+}

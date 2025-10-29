@@ -13,10 +13,10 @@ class AllUser(BaseUserManager):
         """"""
         if not username:
             raise ValueError("Need Username")
-        
+
         if not email:
             raise ValueError("Need Email")
-        
+
         if not phone:
             raise ValueError("Need Phone")
 
