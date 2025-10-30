@@ -1,9 +1,9 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
-from .managers import PublicCommentManager, PublicServiceCommentManager
 from apps.service.models import Service
 
+from .managers import PublicCommentManager, PublicServiceCommentManager
 
 User = settings.AUTH_USER_MODEL
 
@@ -16,8 +16,9 @@ class Post(models.Model):
 
     objects = models.Manager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
+
 
 class Comment(models.Model):
     """"""
@@ -32,7 +33,7 @@ class Comment(models.Model):
 
     publication = PublicCommentManager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user}->{self.post} wrote {self.txt[:15]}"
 
     class Meta:
@@ -58,5 +59,5 @@ class ServiceComment(models.Model):
         verbose_name_plural = "Service Comments"
         ordering = ["-created_at"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.service} - {self.user}: {self.txt}"

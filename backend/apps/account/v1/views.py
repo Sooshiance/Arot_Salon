@@ -1,6 +1,5 @@
 # TODO: Forget password scenarios
 
-from typing import List
 from django.contrib import auth, messages
 from django.http import (
     HttpRequest,
@@ -16,7 +15,6 @@ from apps.account.v1.forms import LoginForm, RegisterForm
 
 def login_user(
     request: HttpRequest,
-    my_list:List=[],
 ) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
     if request.user.is_authenticated:
         messages.warning(request, "not this one")

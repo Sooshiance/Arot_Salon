@@ -1,9 +1,9 @@
+from core.validators import iranian_phone_number_normalizer
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from apps.account.models import User
 
-from core.validators import iranian_phone_number_normalizer
+from apps.account.models import User
 
 
 class RegisterForm(UserCreationForm):
@@ -69,12 +69,12 @@ class RegisterForm(UserCreationForm):
 
     def clean(self) -> None:
         cleaned_data = super(RegisterForm, self).clean()
-        password = cleaned_data.get("password")
-        password2 = cleaned_data.get("password2")
+        password = cleaned_data["password"]
+        password2 = cleaned_data["password2"]
         if password != password2:
             raise ValidationError("Passwords are not match!")
 
-    def clean_phone(self) -> None:
+    def clean_phone(self) -> str | None:
         cleaned_data = super(RegisterForm, self).clean()
         phone = cleaned_data.get("phone")
 

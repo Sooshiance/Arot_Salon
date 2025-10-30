@@ -1,3 +1,5 @@
+from typing import Any, Literal
+
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import RegexValidator
 from django.db import models
@@ -21,13 +23,13 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = ["username", "email"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.phone}"
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm, obj=None) -> Literal[True]:
         return True
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self, app_label: Any) -> Literal[True]:
         return True
 
     class Meta:

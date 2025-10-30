@@ -1,18 +1,15 @@
 import random
 
-from django.test import TestCase
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.test import RequestFactory, Client
-
+from django.test import Client, RequestFactory, TestCase
+from django.urls import reverse
 from faker import Faker
-
 
 User = get_user_model()
 
 
 class TestBaseAccount(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.english_faker = Faker(locale="en-US")
 
         self.client = Client()
@@ -32,7 +29,7 @@ class TestBaseAccount(TestCase):
 
 
 class TestLogin(TestBaseAccount):
-    def setUp(self):
+    def setUp(self) -> None:
         super().setUp()
 
         self.login_url = reverse("account:login")

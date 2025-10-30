@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -32,7 +33,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[Any] = []
 
 
 # Application definition

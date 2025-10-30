@@ -25,7 +25,7 @@ def post_item(request: HttpRequest, pk: int) -> HttpResponse:
     try:
         post = Post.objects.get(pk=pk)
     except FieldDoesNotExist as ex:
-        raise str(ex)
+        raise ex
     comments = Comment.publication.filter(post__exact=post)
     return render(
         request,
@@ -41,7 +41,7 @@ def create_comment_post(
     try:
         post = Post.objects.get(pk=pk)
     except FieldDoesNotExist as ex:
-        raise str(ex)
+        raise ex
     if not request.user.is_authenticated:
         return redirect("account:login")
     if request.method == "POST":

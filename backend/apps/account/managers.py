@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.models import BaseUserManager
 
 
@@ -9,7 +11,7 @@ class AllUser(BaseUserManager):
         phone,
         password=None,
         **kwargs,
-    ):
+    ) -> Any:
         """"""
         if not username:
             raise ValueError("Need Username")
@@ -37,7 +39,7 @@ class AllUser(BaseUserManager):
         email,
         phone,
         password,
-    ):
+    ) -> Any:
         """"""
         user = self.create_user(
             username,
@@ -57,7 +59,7 @@ class AllUser(BaseUserManager):
         email,
         phone,
         password,
-    ):
+    ) -> Any:
         """"""
         user = self.create_user(
             username,
