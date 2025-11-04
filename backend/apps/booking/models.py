@@ -20,6 +20,7 @@ class ReserveService(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.ManyToManyField(Service, blank=True)
     date = models.ForeignKey(Departure, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
     admin_approval = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
