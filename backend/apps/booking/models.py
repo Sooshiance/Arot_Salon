@@ -2,7 +2,7 @@ from core.calendar import passed_days
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from apps.booking.managers import ActiveReservationManager
+from apps.booking.managers import ActiveReservationManager, AdminApprovalManager
 from apps.service.models import Service
 
 User = get_user_model()
@@ -13,7 +13,7 @@ class Departure(models.Model):
     date = models.DateField(validators=[passed_days])
     capacity = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.train} {self.date} {self.capacity}"
 
 
@@ -21,15 +21,36 @@ class ReserveService(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.ManyToManyField(Service, blank=True)
     date = models.ForeignKey(Departure, on_delete=models.CASCADE)
-    approved = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     admin_approval = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     is_active = ActiveReservationManager()
+    approved = AdminApprovalManager()
 
     def __str__(self) -> str:
         return f"{self.user} : {self.title}"
 
     class Meta:
+        verbose_name = "Reserve Service"
+        verbose_name_plural = "Reserve Services"
         ordering = ["-updated_at", "-created_at"]
+        indexes = [
+            models.Index(
+                fields=[
+                    "-updated_at",
+                    "-created_at",
+                    "is_active",
+                ],
+                name="idx_active_recent_reservations",
+            ),
+            models.Index(
+                fields=["user", "is_active", "-updated_at"],
+                name="idx_user_active_reservations",
+            ),
+            models.Index(
+                fields=["date", "is_active"],
+                name="idx_date_active_reservations",
+            ),
+        ]
