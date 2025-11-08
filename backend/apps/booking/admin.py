@@ -1,15 +1,16 @@
 from django.contrib import admin
 
-from .models import Departure, ReserveService
+from .models import ReserveService, Schedule
 
 
-class DepartureAdmin(admin.ModelAdmin):
-    list_display = ("train",)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ("service",)
 
 
 class ReserveServiceAdmin(admin.ModelAdmin):
     list_display = (
         "user",
+        "title",
         "is_active",
         "admin_approval",
     )
@@ -19,7 +20,7 @@ class ReserveServiceAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(Departure, DepartureAdmin)
+admin.site.register(Schedule, ScheduleAdmin)
 
 
 admin.site.register(ReserveService, ReserveServiceAdmin)

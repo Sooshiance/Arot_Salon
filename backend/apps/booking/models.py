@@ -8,19 +8,19 @@ from apps.service.models import Service
 User = get_user_model()
 
 
-class Departure(models.Model):
-    train = models.ForeignKey(Service, on_delete=models.CASCADE)
+class Schedule(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     date = models.DateField(validators=[passed_days])
     capacity = models.PositiveIntegerField(default=0)
 
     def __str__(self) -> str:
-        return f"{self.train} {self.date} {self.capacity}"
+        return f"{self.service} {self.date} {self.capacity}"
 
 
 class ReserveService(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.ManyToManyField(Service, blank=True)
-    date = models.ForeignKey(Departure, on_delete=models.CASCADE)
+    date = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     admin_approval = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
