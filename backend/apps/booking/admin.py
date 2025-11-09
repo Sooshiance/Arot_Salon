@@ -10,12 +10,11 @@ class ScheduleAdmin(admin.ModelAdmin):
 class ReserveServiceAdmin(admin.ModelAdmin):
     list_display = (
         "user",
-        "title",
-        "is_active",
+        "activation",
         "admin_approval",
     )
     list_filter = (
-        "is_active",
+        "activation",
         "admin_approval",
     )
 

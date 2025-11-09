@@ -6,7 +6,7 @@ class ActiveReservationManager(models.Manager):
     """Manager to soft delete user reservation"""
 
     def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(is_active=True)
+        return super().get_queryset().filter(activation=True)
 
 
 class AdminApprovalManager(models.Manager):
