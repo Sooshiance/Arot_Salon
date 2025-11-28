@@ -7,7 +7,7 @@ from apps.account.models import User
 
 
 class RegisterForm(UserCreationForm):
-    password = forms.CharField(
+    password1 = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control my-5",
@@ -36,7 +36,7 @@ class RegisterForm(UserCreationForm):
         ]
 
         labels = {
-            "password": "گذر واژه",
+            "password1": "گذر واژه",
             "password2": "تکرار گذر واژه",
         }
 
@@ -53,7 +53,7 @@ class RegisterForm(UserCreationForm):
             "username": forms.TextInput(
                 attrs={"class": "form-control my-5", "placeholder": "Username"}
             ),
-            "password": forms.PasswordInput(
+            "password1": forms.PasswordInput(
                 attrs={"class": "form-control my-5", "placeholder": "••••••••••••"}
             ),
             "password2": forms.PasswordInput(
@@ -69,9 +69,9 @@ class RegisterForm(UserCreationForm):
 
     def clean(self) -> None:
         cleaned_data = super(RegisterForm, self).clean()
-        password = cleaned_data["password"]
+        password1 = cleaned_data["password1"]
         password2 = cleaned_data["password2"]
-        if password != password2:
+        if password1 != password2:
             raise ValidationError("Passwords are not match!")
 
     def clean_phone(self) -> str | None:

@@ -33,7 +33,6 @@ def login_user(
 
             if user is not None:
                 auth.login(request, user)
-                messages.success(request, "error")
                 return redirect("service:home")
             else:
                 messages.error(request, "Error")
@@ -79,7 +78,7 @@ def register_user(
             phone = form.cleaned_data["phone"]
             email = form.cleaned_data["email"]
             username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
+            password = form.cleaned_data["password1"]
             user = User.objects.create_user(
                 phone=phone,
                 email=email,
