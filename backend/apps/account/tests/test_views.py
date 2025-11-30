@@ -98,7 +98,7 @@ class TestRegister(TestBaseAccount):
         user_data = {
             "email": self.english_faker.email(),
             "phone": f"0912{phone_suffix}",
-            "password": self.user_password,
+            # "password": self.user_password,
             "password1": self.user_password,
             "password2": self.user_password,
             "username": self.english_faker.name(),
@@ -116,6 +116,8 @@ class TestRegister(TestBaseAccount):
     def test_create_user_fail(self) -> None:
         """Test that registration fails when using existing unique field values."""
 
+        my_pass = self.english_faker.password(15)
+
         # Test cases for each unique field
         test_cases = [
             {
@@ -123,7 +125,8 @@ class TestRegister(TestBaseAccount):
                 "data": {
                     "email": self.user_data["email"],  # Use existing email
                     "phone": f"09123{random.randint(a=1, b=999999)}",  # New phone
-                    "password": self.english_faker.password(15),
+                    "password1": my_pass,
+                    "password2": my_pass,
                     "username": self.english_faker.user_name(),  # New username
                 },
                 "field": "email",
@@ -133,7 +136,8 @@ class TestRegister(TestBaseAccount):
                 "data": {
                     "email": self.english_faker.email(safe=True),  # New email
                     "phone": self.user_data["phone"],  # Use existing phone
-                    "password": self.english_faker.password(15),
+                    "password1": my_pass,
+                    "password2": my_pass,
                     "username": self.english_faker.user_name(),  # New username
                 },
                 "field": "phone",
@@ -143,7 +147,8 @@ class TestRegister(TestBaseAccount):
                 "data": {
                     "email": self.english_faker.email(safe=True),  # New email
                     "phone": f"09123{random.randint(a=1, b=999999)}",  # New phone
-                    "password": self.english_faker.password(15),
+                    "password1": my_pass,
+                    "password2": my_pass,
                     "username": self.user_data["username"],  # Use existing username
                 },
                 "field": "username",

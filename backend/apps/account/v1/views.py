@@ -35,7 +35,10 @@ def login_user(
                 auth.login(request, user)
                 return redirect("service:home")
             else:
-                messages.error(request, "Error")
+                messages.error(
+                    request,
+                    "مشخصات وارد شده اشتباه می باشد، دوباره تلاش کنید",
+                )
                 return render(
                     request,
                     "account/login.html",
