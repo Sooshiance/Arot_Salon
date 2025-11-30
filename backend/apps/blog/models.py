@@ -38,6 +38,15 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(
+                fields=[
+                    "is_public",
+                    "created_at",
+                ],
+                name="idx_public_comments",
+            )
+        ]
 
 
 class ServiceComment(models.Model):
@@ -58,6 +67,15 @@ class ServiceComment(models.Model):
         verbose_name = "Service Comment"
         verbose_name_plural = "Service Comments"
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(
+                fields=[
+                    "is_public",
+                    "created_at",
+                ],
+                name="idx_public_service_comments",
+            )
+        ]
 
     def __str__(self) -> str:
         return f"{self.service} - {self.user}: {self.txt}"
