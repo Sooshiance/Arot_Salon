@@ -39,6 +39,7 @@ class ReserveService(models.Model):
         verbose_name = "Reserve Service"
         verbose_name_plural = "Reserve Services"
         ordering = ["-updated_at", "-created_at"]
+        unique_together = [("user", "date")]
         indexes = [
             models.Index(
                 fields=[

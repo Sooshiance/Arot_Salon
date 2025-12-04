@@ -1,13 +1,18 @@
 from django.urls import path
 
-from .views import booking_view
+from .views import user_delete_service_view, user_reserve_service_view
 
 app_name = "booking"
 
 urlpatterns = [
     path(
         "",
-        booking_view,
-        name="booking_view",
+        user_reserve_service_view,
+        name="user_reserve_service_url",
+    ),
+    path(
+        "<pk:int>/",
+        user_delete_service_view,
+        name="user_delete_service_url",
     ),
 ]
