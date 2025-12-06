@@ -117,11 +117,17 @@ class TestComment(BaseTestBlog):
 
         self.client.force_login(self.user)
 
+        txt = self.english_faker.text(5)
+
         response = self.client.post(
             self.create_comment_post_url,
             data={
-                "txt": self.english_faker.text(5),
+                "txt": txt,
             },
         )
 
         self.assertEqual(response.status_code, 302)
+        print("="*50, ">",txt)
+        print(f"last comment {'='*30} > {Comment.objects.first()}")
+
+        self.assertEqual(Comment.objects.first().txt, txt)

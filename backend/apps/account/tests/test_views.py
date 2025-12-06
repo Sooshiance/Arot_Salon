@@ -18,7 +18,7 @@ class TestBaseAccount(TestCase):
         self.password = self.english_faker.password(length=10)
         self.user_data = {
             "email": self.english_faker.email(safe=True),
-            "phone": f"09123{random.randint(a=1, b=999999)}",
+            "phone": f"09123{random.randint(a=100000, b=999999)}",
             "password": self.password,
             "username": self.english_faker.user_name(),
         }
@@ -97,8 +97,7 @@ class TestRegister(TestBaseAccount):
 
         user_data = {
             "email": self.english_faker.email(),
-            "phone": f"0912{phone_suffix}",
-            # "password": self.user_password,
+            "phone": f"0923{phone_suffix}",
             "password1": self.user_password,
             "password2": self.user_password,
             "username": self.english_faker.name(),

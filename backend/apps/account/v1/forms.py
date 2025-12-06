@@ -69,19 +69,21 @@ class RegisterForm(UserCreationForm):
 
     def clean(self) -> None:
         cleaned_data = super(RegisterForm, self).clean()
-        password1 = cleaned_data["password1"]
-        password2 = cleaned_data["password2"]
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
         if password1 != password2:
             raise ValidationError("Passwords are not match!")
 
     def clean_phone(self) -> str | None:
         cleaned_data = super(RegisterForm, self).clean()
         phone = cleaned_data.get("phone")
+        username = cleaned_data.get("username")
 
-        normalized_phone = iranian_phone_number_normalizer(phone)
+        normalized_phone = iranian_phone_number_normalizer(str(phone))
 
         if normalized_phone == "Error":
             raise ValidationError("Phone is not an iranian phone number")
+
         return normalized_phone
 
 
@@ -96,3 +98,13 @@ class LoginForm(forms.Form):
             attrs={"class": "form-control my-5", "placeholder": "••••••••••••"}
         )
     )
+
+    def clean_phone(self) -> str | None:
+        cleaned_data = super(LoginForm, self).clean()
+        phone = cleaned_data.get("phone")
+
+        normalized_phone = iranian_phone_number_normalizer(str(phone))
+
+        if normalized_phone == "Error":
+            raise ValidationError("Phone is not an iranian phone number")
+        return normalized_phone

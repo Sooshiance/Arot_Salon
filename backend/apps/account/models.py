@@ -35,4 +35,3 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
-        unique_together = ["phone", "username"]
