@@ -9,7 +9,7 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 
-from apps.account.models import User
+from apps.account.models import Profile, User
 from apps.account.v1.forms import LoginForm, RegisterForm
 
 
@@ -102,3 +102,15 @@ def register_user(
     else:
         form = RegisterForm()
     return render(request, "account/register.html", {"form": form})
+
+
+def profile_view(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+        return render(
+            request,
+            "account/profile.html",
+            {"profile": profile},
+        )
+    else:
+        return redirect("account:login")

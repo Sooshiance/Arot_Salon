@@ -35,3 +35,12 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    first_name = models.CharField(max_length=30, null=True, blank=True)
+
+    def __str__(self)->str:
+        return f"{self.user.phone}"
