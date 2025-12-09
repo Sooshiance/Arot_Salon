@@ -88,7 +88,7 @@ def user_delete_service_view(
                     # Double-check we can restore capacity
                     schedule: Schedule = reservation.date
 
-                    reservation.delete()
+                    reservation.activation = False
 
                     Schedule.objects.filter(pk=schedule.pk).update(
                         capacity=F("capacity") + 1
