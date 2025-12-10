@@ -11,7 +11,7 @@ urlpatterns = [
         name="user_reserve_service_url",
     ),
     path(
-        "<pk:int>/",
+        "<int:pk>/",
         user_delete_service_view,
         name="user_delete_service_url",
     ),

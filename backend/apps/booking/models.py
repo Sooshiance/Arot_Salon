@@ -2,10 +2,7 @@ from core.calendar import passed_days
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from apps.booking.managers import (
-    ActiveReservationManager,
-    AdminApprovalManager
-)
+from apps.booking.managers import ActiveReservationManager, AdminApprovalManager
 from apps.service.models import Service
 
 User = get_user_model()
@@ -31,6 +28,7 @@ class ReserveService(models.Model):
 
     is_active = ActiveReservationManager()
     approved = AdminApprovalManager()
+    objects = models.Manager()
 
     def __str__(self) -> str:
         return f"{self.user}"
@@ -56,5 +54,12 @@ class ReserveService(models.Model):
             models.Index(
                 fields=["date", "activation"],
                 name="idx_date_active_reservations",
+            ),
+            models.Index(
+                fields=[
+                    "user",
+                    "admin_approval",
+                ],
+                name="idx_user_approved_turn",
             ),
         ]

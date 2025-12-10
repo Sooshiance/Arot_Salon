@@ -1,9 +1,13 @@
-# TODO: Need multiple users for `race condition` situation
 import random
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 from faker import Faker
+
+from apps.booking.models import Schedule
+from apps.service.models import Service
 
 User = get_user_model()
 
@@ -14,12 +18,43 @@ class BaseReservationTest(TestCase):
 
         self.english_faker = Faker(locale="en-US")
 
-        self.user_data = {
-            "email": self.english_faker.safe_email(),
-            "username": f"{self.english_faker.user_name()}_{random.randint(1, 10000)}",
-            "phone": f"091{random.randint(1_0000_000, 99_999_999)}",
-        }
+        self.user_reserve_service_url = reverse("booking:user_reserve_service_url")
 
-        self.john_doe = User.objects.create_user(**self.user_data)
-        self.mary_ray = User.objects.create_user(**self.user_data)
-        self.roy_phil = User.objects.create_user(**self.user_data)
+        self.john_doe = User.objects.create_user(
+            email=self.english_faker.safe_email(),
+            username=self.english_faker.text(15),
+            phone=f"091{random.randint(a=10000000, b=99999999)}",
+        )
+        self.mary_ray = User.objects.create_user(
+            email=self.english_faker.safe_email(),
+            username=self.english_faker.text(15),
+            phone=f"091{random.randint(a=10000000, b=99999999)}",
+        )
+        self.roy_phil = User.objects.create_user(
+            email=self.english_faker.safe_email(),
+            username=self.english_faker.text(15),
+            phone=f"091{random.randint(a=10000000, b=99999999)}",
+        )
+
+        self.service = Service.objects.create(
+            title=self.english_faker.texts(10),
+        )
+
+        self.schedule = Schedule.objects.create(
+            service=self.service,
+            date=datetime(2026, 12, 12),
+            capacity=2,
+        )
+
+    def test_reserve_success(self):
+        """Test successful reservation with date selection"""
+        self.client.force_login(self.john_doe)
+
+        # Post the date, not the schedule ID
+        resp = self.client.post(
+            self.user_reserve_service_url,
+            data={"date": "2026-12-12"},  # Use string format for date input
+        )
+        # updated_schedule = Schedule.objects.get(pk=self.schedule.pk)
+        self.assertEqual(self.schedule.capacity, 1)
+        self.assertEqual(resp.status_code, 302)

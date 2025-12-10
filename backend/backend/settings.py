@@ -156,18 +156,18 @@ AUTH_USER_MODEL = "account.User"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
-if DEBUG:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-            "LOCATION": "127.0.0.1:11211",
-        }
-    }
-else:
-    STATIC_ROOT = (os.path.join(BASE_DIR, "ui"),)
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-            "LOCATION": "/var/tmp/django_cache",
-        }
-    }
+# if DEBUG:
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+#             "LOCATION": "127.0.0.1:11211",
+#         }
+#     }
+# else:
+#     STATIC_ROOT = (os.path.join(BASE_DIR, "ui"),)
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+#             "LOCATION": "/var/tmp/django_cache",
+#         }
+#     }

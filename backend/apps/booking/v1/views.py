@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import F
@@ -6,68 +7,73 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from apps.booking.models import ReserveService, Schedule
-from apps.booking.v1.forms import ReserveServiceForm
+
+from .forms import ReserveServiceForm
 
 
-def user_reserve_service_view(
-    request: HttpRequest,
-) -> HttpResponse | HttpResponseRedirect:
-    if request.user.is_authenticated:
-        if request.method == "POST":
-            form = ReserveServiceForm(request.POST, user=request.user)
+@login_required
+def user_reserve_service_view(request: HttpRequest):
+    if request.method == "POST":
+        form = ReserveServiceForm(request.POST, user=request.user)
 
-            if form.is_valid():
-                try:
-                    # Prevent `Race Condition` situation
-                    with transaction.atomic():
-                        schedule = Schedule.objects.select_for_update().get(
-                            pk=form.cleaned_data["date"].pk
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Get the selected date from form
+                    selected_date = form.cleaned_data["date"]
+
+                    # Find available schedules for this date with row lock
+                    available_schedules = (
+                        Schedule.objects.select_for_update()
+                        .filter(
+                            date=selected_date,
+                            capacity__gt=0,
                         )
+                        .order_by("capacity")
+                    )  # Get the one with most capacity first
 
-                        if schedule.capacity <= 0:
-                            messages.error(
-                                request,
-                                f"No capacity available for {schedule.service.title} on {schedule.date}",
-                            )
-                            return redirect("booking:user_reserve_service_url")
-
-                        reservation = form.save(commit=False)
-                        reservation.user = request.user
-                        reservation.save()
-                        Schedule.objects.filter(pk=schedule.pk).update(
-                            capacity=F("capacity") - 1
-                        )
-
-                        messages.success(
+                    if not available_schedules.exists():
+                        messages.error(
                             request,
-                            f"Successfully reserved {schedule.service.title} for {schedule.date}!",
+                            f"No available services for {selected_date}. Please choose another date.",
                         )
-                        return redirect("profile:profile")
+                        return redirect("booking:user_reserve_service_url")
 
-                except Schedule.DoesNotExist:
-                    messages.error(
+                    # Use the first available schedule
+                    schedule = available_schedules.first()
+
+                    # Create reservation
+                    reservation = form.save(commit=False)
+                    reservation.save()  # This sets the date field to the schedule
+
+                    # Update capacity atomically
+                    Schedule.objects.filter(pk=schedule.pk).update(
+                        capacity=F("capacity") - 1
+                    )
+
+                    messages.success(
                         request,
-                        "The selected schedule is no longer available. Please try again.",
+                        f"Successfully reserved {schedule.service.title} for {selected_date}!",
                     )
-                    return redirect("booking:user_reserve_service_url")
-                except ValidationError as e:
-                    messages.error(request, str(e))
-                    return redirect("booking:user_reserve_service_url")
-                except Exception:
-                    messages.error(
-                        request, "An unexpected error occurred. Please try again."
-                    )
-                    return redirect("booking:user_reserve_service_url")
-            else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{field}: {error}")
-                return render(request, "booking/reservation.html", {"form": form})
+                    return redirect("booking:home")
+
+            except ValidationError as e:
+                messages.error(request, str(e))
+                return redirect("booking:user_reserve_service_url")
+            except Exception:
+                messages.error(
+                    request, "An error occurred during reservation. Please try again."
+                )
+                return redirect("booking:user_reserve_service_url")
         else:
-            form = ReserveServiceForm(user=request.user)
+            # Show form errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
             return render(request, "booking/reservation.html", {"form": form})
     else:
-        return redirect("account:login")
+        form = ReserveServiceForm(user=request.user)
+        return render(request, "booking/reservation.html", {"form": form})
 
 
 def user_delete_service_view(
