@@ -2,4 +2,11 @@
 
 {% block content %}
 <h1>hello</h1>
+<form action="{% url 'booking:user_reserve_service_url' %}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">
+        ذخیره نوبت
+    </button>
+</form>
 {% endblock content %}
